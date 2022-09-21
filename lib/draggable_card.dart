@@ -141,7 +141,7 @@ class _DraggableCardState extends State<DraggableCard> with TickerProviderStateM
   @override
   void dispose() {
     slideBackAnimation.dispose();
-    slideBackAnimation.dispose();
+    slideOutAnimation.dispose();
     super.dispose();
   }
 
