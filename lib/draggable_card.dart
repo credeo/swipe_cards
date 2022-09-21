@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 enum SlideDirection { left, right, up }
+
 enum SlideRegion { inNopeRegion, inLikeRegion, inSuperLikeRegion }
 
 class DraggableCard extends StatefulWidget {
@@ -32,8 +33,7 @@ class DraggableCard extends StatefulWidget {
   _DraggableCardState createState() => _DraggableCardState();
 }
 
-class _DraggableCardState extends State<DraggableCard>
-    with TickerProviderStateMixin {
+class _DraggableCardState extends State<DraggableCard> with TickerProviderStateMixin {
   GlobalKey profileCardKey = GlobalKey(debugLabel: 'profile_card_key');
   Offset? cardOffset = const Offset(0.0, 0.0);
   Offset? dragStart;
@@ -146,11 +146,8 @@ class _DraggableCardState extends State<DraggableCard>
 
   Offset _chooseRandomDragStart() {
     final cardContext = profileCardKey.currentContext!;
-    final cardTopLeft = (cardContext.findRenderObject() as RenderBox)
-        .localToGlobal(const Offset(0.0, 0.0));
-    final dragStartY =
-        cardContext.size!.height * (Random().nextDouble() < 0.5 ? 0.25 : 0.75) +
-            cardTopLeft.dy;
+    final cardTopLeft = (cardContext.findRenderObject() as RenderBox).localToGlobal(const Offset(0.0, 0.0));
+    final dragStartY = cardContext.size!.height * (Random().nextDouble() < 0.5 ? 0.25 : 0.75) + cardTopLeft.dy;
     return Offset(cardContext.size!.width / 2 + cardTopLeft.dx, dragStartY);
   }
 
@@ -158,8 +155,7 @@ class _DraggableCardState extends State<DraggableCard>
     await Future.delayed(Duration(milliseconds: 1)).then((_) {
       final screenWidth = context.size!.width;
       dragStart = _chooseRandomDragStart();
-      slideOutTween = Tween(
-          begin: const Offset(0.0, 0.0), end: Offset(-2 * screenWidth, 0.0));
+      slideOutTween = Tween(begin: const Offset(0.0, 0.0), end: Offset(-2 * screenWidth, 0.0));
       slideOutAnimation.forward(from: 0.0);
     });
   }
@@ -168,8 +164,7 @@ class _DraggableCardState extends State<DraggableCard>
     await Future.delayed(Duration(milliseconds: 1)).then((_) {
       final screenWidth = context.size!.width;
       dragStart = _chooseRandomDragStart();
-      slideOutTween = Tween(
-          begin: const Offset(0.0, 0.0), end: Offset(2 * screenWidth, 0.0));
+      slideOutTween = Tween(begin: const Offset(0.0, 0.0), end: Offset(2 * screenWidth, 0.0));
       slideOutAnimation.forward(from: 0.0);
     });
   }
@@ -178,8 +173,7 @@ class _DraggableCardState extends State<DraggableCard>
     await Future.delayed(Duration(milliseconds: 1)).then((_) {
       final screenHeight = context.size!.height;
       dragStart = _chooseRandomDragStart();
-      slideOutTween = Tween(
-          begin: const Offset(0.0, 0.0), end: Offset(0.0, -2 * screenHeight));
+      slideOutTween = Tween(begin: const Offset(0.0, 0.0), end: Offset(0.0, -2 * screenHeight));
       slideOutAnimation.forward(from: 0.0);
     });
   }
@@ -199,9 +193,7 @@ class _DraggableCardState extends State<DraggableCard>
 
     setState(() {
       if (isInLeftRegion || isInRightRegion) {
-        slideRegion = isInLeftRegion
-            ? SlideRegion.inNopeRegion
-            : SlideRegion.inLikeRegion;
+        slideRegion = isInLeftRegion ? SlideRegion.inNopeRegion : SlideRegion.inLikeRegion;
       } else if (isInTopRegion) {
         slideRegion = SlideRegion.inSuperLikeRegion;
       } else {
@@ -230,16 +222,13 @@ class _DraggableCardState extends State<DraggableCard>
 
     setState(() {
       if (isInLeftRegion || isInRightRegion) {
-        slideOutTween = Tween(
-            begin: cardOffset, end: dragVector * (2 * context.size!.width));
+        slideOutTween = Tween(begin: cardOffset, end: dragVector * (2 * context.size!.width));
         slideOutAnimation.forward(from: 0.0);
 
-        slideOutDirection =
-            isInLeftRegion ? SlideDirection.left : SlideDirection.right;
+        slideOutDirection = isInLeftRegion ? SlideDirection.left : SlideDirection.right;
       } else if (isInTopRegion) {
         if (widget.upSwipeAllowed) {
-          slideOutTween = Tween(
-              begin: cardOffset, end: dragVector * (2 * context.size!.height));
+          slideOutTween = Tween(begin: cardOffset, end: dragVector * (2 * context.size!.height));
           slideOutAnimation.forward(from: 0.0);
 
           slideOutDirection = SlideDirection.up;
@@ -261,11 +250,8 @@ class _DraggableCardState extends State<DraggableCard>
 
   double _rotation(Rect? dragBounds) {
     if (dragStart != null) {
-      final rotationCornerMultiplier =
-          dragStart!.dy >= dragBounds!.top + (dragBounds.height / 2) ? -1 : 1;
-      return (pi / 8) *
-          (cardOffset!.dx / dragBounds.width) *
-          rotationCornerMultiplier;
+      final rotationCornerMultiplier = dragStart!.dy >= dragBounds!.top + (dragBounds.height / 2) ? -1 : 1;
+      return (pi / 8) * (cardOffset!.dx / dragBounds.width) * rotationCornerMultiplier;
     } else {
       return 0.0;
     }
@@ -287,27 +273,26 @@ class _DraggableCardState extends State<DraggableCard>
 
     //Disables dragging card while slide out animation is in progress. Solves
     // issue that fast swipes cause the back card not loading
-    if (widget.isBackCard &&
-        anchorBounds != null &&
-        cardOffset!.dx < anchorBounds!.height) {
+    if (widget.isBackCard && anchorBounds != null && cardOffset!.dx < anchorBounds!.height) {
       cardOffset = Offset.zero;
     }
 
     return Transform(
-      transform: Matrix4.translationValues(cardOffset!.dx, cardOffset!.dy, 0.0)
-        ..rotateZ(_rotation(anchorBounds)),
+      transform: Matrix4.translationValues(cardOffset!.dx, cardOffset!.dy, 0.0)..rotateZ(_rotation(anchorBounds)),
       origin: _rotationOrigin(anchorBounds),
       child: Container(
         key: profileCardKey,
         width: anchorBounds?.width,
         height: anchorBounds?.height,
         padding: widget.padding,
-        child: GestureDetector(
-          onPanStart: _onPanStart,
-          onPanUpdate: _onPanUpdate,
-          onPanEnd: _onPanEnd,
-          child: widget.card,
-        ),
+        child: widget.isDraggable
+            ? GestureDetector(
+                onPanStart: _onPanStart,
+                onPanUpdate: _onPanUpdate,
+                onPanEnd: _onPanEnd,
+                child: widget.card,
+              )
+            : widget.card,
       ),
     );
   }
@@ -316,8 +301,7 @@ class _DraggableCardState extends State<DraggableCard>
     await Future.delayed(Duration(milliseconds: 3));
     box = context.findRenderObject() as RenderBox?;
     topLeft = box!.size.topLeft(box!.localToGlobal(const Offset(0.0, 0.0)));
-    bottomRight =
-        box!.size.bottomRight(box!.localToGlobal(const Offset(0.0, 0.0)));
+    bottomRight = box!.size.bottomRight(box!.localToGlobal(const Offset(0.0, 0.0)));
     anchorBounds = new Rect.fromLTRB(
       topLeft.dx,
       topLeft.dy,
